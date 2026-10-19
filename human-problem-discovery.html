@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Independent Human Problem Discovery</title>
+    <link rel="icon" href="spm.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --surface-color: #ffffff;
+            --border-color: #e2dfdc;
+            --border-focus: #706b63;
+            --text-main: #2c2a29;
+            --text-muted: #6e6963;
+            --accent: #1a1918;
+            --accent-hover: #383532;
+            --success: #2e7d32;
+            --header-color: #4338ca;
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .document-container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Header Styles */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        .doc-title {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--header-color);
+            margin-bottom: 8px;
+        }
+
+        .doc-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Section Layout */
+        .section-heading {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 36px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: var(--bg-color);
+            color: var(--text-main);
+            border-color: var(--border-focus);
+        }
+
+        .doc-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .doc-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background: var(--surface-color);
+            box-shadow: 0 0 0 3px rgba(112, 107, 99, 0.1);
+        }
+
+        /* Output Box Styling */
+        .output-card {
+            margin-top: 30px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .output-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .prompt-preview {
+            width: 100%;
+            min-height: 250px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            resize: vertical;
+            white-space: pre-wrap;
+            margin-bottom: 16px;
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        /* Footer */
+        .doc-footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 8px;
+            }
+            .document-container {
+                padding: 24px 16px;
+            }
+            .doc-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <!-- Header -->
+        <header class="doc-header">
+            <h1 class="doc-title">Independent Human Problem Discovery</h1>
+            <p class="doc-subtitle">(and Reddit Source Collection)</p>
+        </header>
+
+        <!-- User Inputs Section -->
+        <section>
+            <h2 class="section-heading">1. Variables & Inputs</h2>
+            
+            <div class="input-group">
+                <div class="input-label-wrapper">
+                    <label class="input-label" for="inputResearchArea">[ENTER A MARKET, AUDIENCE, PRODUCT, SUBJECT, OR BROAD AREA OF INTEREST]</label>
+                    <button type="button" class="reset-btn" onclick="resetField('inputResearchArea')">Reset Field</button>
+                </div>
+                <textarea id="inputResearchArea" class="doc-input" placeholder="e.g., Remote team collaboration tools for asynchronous workers" oninput="updatePrompts()"></textarea>
+            </div>
+        </section>
+
+        <!-- Generated Output Section -->
+        <section>
+            <h2 class="section-heading">2. Generated Output Prompt</h2>
+            
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Live Prompt Box</span>
+                </div>
+                <textarea id="promptOutput1" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('promptOutput1', this)">Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        // Reusable Prompt Template containing placeholders
+        const template1 = `ROLE
+
+You are an Independent Human Problem Discovery Research Specialist. Your task is to discover genuine Reddit discussions revealing real-life problems, unmet needs, frustrations, unanswered questions, unexpected experiences, and unfamiliar perspectives.
+
+INPUT
+
+Research Area: {RESEARCH_AREA}
+
+OBJECTIVE
+
+Discover real human problems and perspectives within the specified Research Area, including problems I may not know about, have not considered, or have not yet recognised as distinct issues.
+
+My primary purpose is to expand my understanding of people's actual experiences and discover unfamiliar problems. My next priority is to use that understanding to provide meaningful help. Sales and commercial outcomes are secondary.
+
+RESEARCH PRINCIPLES
+
+1. Understand the Research Area
+
+Interpret the supplied Research Area broadly enough to discover relevant problems without restricting the search to predefined topics or assumptions about what people need.
+
+If the input names a product or service, do not restrict discovery to problems that the product already claims to solve.
+
+If the input names a market or audience, explore relevant experiences across that area.
+
+If the input names a broad subject, discover the real-life problems and questions associated with it.
+
+2. Discover Problems Beyond Existing Knowledge
+
+Search public Reddit discussions for specific personal experiences, unresolved questions, recurring difficulties, failed attempts, unmet goals, confusion, and unexpected outcomes.
+
+Do not begin and end with a predefined list of problems.
+
+Explore different ways people describe their experiences, including informal language and expressions that do not use formal terminology.
+
+Look for potentially unfamiliar problems, overlooked needs, unexpected perspectives, and experiences that do not fit obvious categories.
+
+3. Explore Broadly but Remain Relevant
+
+Use varied search queries and relevant subreddits to explore different dimensions of the Research Area.
+
+Use the wording found in relevant posts to identify additional search directions.
+
+Do not force every post into a familiar category. Do not include unrelated discussions merely to increase the number of results.
+
+If an important discovery falls outside the immediate scope, record it separately as a possible future research direction.
+
+4. Preserve Original Evidence
+
+Prioritise original Reddit discussion threads containing genuine first-person experiences or meaningful questions.
+
+For each relevant post, collect:
+
+1. Post title.
+2. Direct URL to the original Reddit thread.
+3. Subreddit name.
+4. Publication date, if available.
+5. A brief, factual description of the problem explicitly stated by the author.
+6. Discovery classification.
+7. Source verification status.
+
+5. Classify Discoveries
+
+Core Discovery: Directly relevant to the Research Area.
+
+Exploratory Discovery: Reveals a potentially unfamiliar problem, unexpected experience, or distinct perspective within the Research Area.
+
+Out-of-Scope Discovery: Potentially important but outside the current Research Area; retain only when it suggests a meaningful future research direction.
+
+These labels are provisional. Do not treat them as final analytical conclusions.
+
+6. Verify Sources
+
+Use the following labels:
+
+Verified: The original post was opened and the relevant content was checked.
+
+Partially Verified: A relevant search result or accessible excerpt was found, but the original post could not be fully checked.
+
+Inaccessible: The original URL was identified, but the content could not be accessed.
+
+Never invent posts, titles, URLs, dates, quotations, or user experiences.
+
+Do not present search-result snippets as verified quotations. Remove duplicate URLs within the current research run.
+
+Use publicly accessible sources and permitted research methods. Do not bypass access restrictions or obtain private or deleted material through unauthorised methods.
+
+OUTPUT FORMAT
+
+PART 1 — CORE DISCOVERY
+
+Create a table with these columns:
+
+ID | Post Title | Original Reddit URL | Subreddit | Date | Author's Stated Problem | Verification Status
+
+PART 2 — EXPLORATORY DISCOVERY
+
+Use the same table structure and add a column:
+
+Potential New Problem or Perspective
+
+Keep descriptions brief and factual. Do not conduct deep analysis.
+
+PART 3 — POSSIBLE FUTURE RESEARCH DIRECTIONS
+
+List any potentially important problems discovered outside the immediate Research Area. Explain briefly why each may deserve separate investigation.
+
+Do not include unrelated topics merely for completeness.
+
+PART 4 — COLLECTION SUMMARY
+
+Report:
+
+1. Total unique posts collected.
+2. Number of Core, Exploratory, and Out-of-Scope discoveries.
+3. Number of Verified, Partially Verified, and Inaccessible sources.
+4. Number of duplicate URLs removed.
+5. Relevant subreddits searched.
+6. Search limitations and access issues.
+7. Additional search phrases or directions identified during the research.
+
+STRICT ANALYTICAL BOUNDARIES
+
+Do not perform deep thematic analysis.
+
+Do not diagnose people, infer hidden motives, or explain underlying psychological mechanisms.
+
+Do not formulate solutions or recommendations for individual authors.
+
+Do not generate content ideas, marketing strategies, or sales copy.
+
+Do not assume that collected posts represent the wider population statistically.
+
+Do not force discoveries to confirm an existing framework or to justify a product.
+
+FINAL PURPOSE
+
+Discover and preserve authentic source material so I can personally examine people's experiences, recognise unfamiliar problems, question my existing assumptions, and determine what deserves further investigation.
+
+My intended process is:
+
+Research Area → Independent Problem Discovery → Source Collection → Personal Analysis → Deeper Understanding → Real Help.
+
+Commercial outcomes are secondary to genuine understanding and meaningful help.`;
+
+        // Function to update all prompts in real-time as the user types
+        function updatePrompts() {
+            const researchArea = document.getElementById('inputResearchArea').value;
+
+            let finalPrompt1 = template1.replace('{RESEARCH_AREA}', researchArea);
+
+            document.getElementById('promptOutput1').value = finalPrompt1;
+        }
+
+        // Reset specific input field (clears it completely) and refreshes prompt box
+        function resetField(fieldId) {
+            document.getElementById(fieldId).value = '';
+            updatePrompts();
+        }
+
+        // Copy functionality with visual feedback
+        function copyPrompt(elementId, btnElement) {
+            const outputBox = document.getElementById(elementId);
+
+            outputBox.select();
+            outputBox.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                const originalText = btnElement.textContent;
+                btnElement.textContent = '✓ Copied!';
+                btnElement.classList.add('copied');
+
+                window.getSelection().removeAllRanges();
+
+                setTimeout(() => {
+                    btnElement.textContent = originalText;
+                    btnElement.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        }
+
+        // Initialize prompt generation on page load
+        window.onload = updatePrompts;
+    </script>
+</body>
+</html>
