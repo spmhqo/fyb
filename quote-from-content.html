@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote and Post - Prompt Workspace</title>
+    <link rel="icon" href="spm.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --surface-color: #ffffff;
+            --border-color: #e2dfdc;
+            --border-focus: #706b63;
+            --text-main: #2c2a29;
+            --text-muted: #6e6963;
+            --accent: #1a1918;
+            --accent-hover: #383532;
+            --success: #2e7d32;
+            --header-color: #4338ca;
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .document-container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Header Styles */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        .doc-title {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--header-color);
+            margin-bottom: 8px;
+        }
+
+        .doc-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Section Layout */
+        .section-heading {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 36px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .reset-field-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-field-btn:hover {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .doc-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .doc-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background: var(--surface-color);
+            box-shadow: 0 0 0 3px rgba(112, 107, 99, 0.1);
+        }
+
+        /* Output Box Styling */
+        .output-card {
+            margin-top: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .output-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .prompt-preview {
+            width: 100%;
+            min-height: 200px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            resize: vertical;
+            white-space: pre-wrap;
+            margin-bottom: 16px;
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        /* Footer */
+        .doc-footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 8px;
+            }
+            .document-container {
+                padding: 24px 16px;
+            }
+            .doc-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <!-- Header -->
+        <header class="doc-header">
+            <h1 class="doc-title">Quote and Post</h1>
+            <p class="doc-subtitle">(for social media)</p>
+        </header>
+
+        <!-- User Inputs Section -->
+        <section>
+            <h2 class="section-heading">Variables & Inputs</h2>
+            
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputContent">মূল কনটেন্ট:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputContent')">Reset Field</button>
+                </div>
+                <textarea id="inputContent" class="doc-input" placeholder="[এখানে আপনার কনটেন্ট পেস্ট করুন]" oninput="updatePrompts()">সঠিক স্ট্র্যাটেজি না জেনে শুধু অন্ধের মতো কনটেন্ট পোস্ট করে গেলে দিনশেষে ক্লান্তি বাড়ে, ফল আসে না। সোশ্যাল মিডিয়ায় সফল হতে হলে আগে বুঝতে হবে আপনার দর্শক ঠিক কী খুঁজছে এবং কোন সমস্যাটার সমাধান তারা চায়।</textarea>
+            </div>
+
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputStatement">Tweetable Statement:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputStatement')">Reset Field</button>
+                </div>
+                <textarea id="inputStatement" class="doc-input" placeholder="[এখানে নির্বাচিত statement বসান]" oninput="updatePrompts()">অন্ধের মতো কনটেন্ট পোস্ট করলেই সেলস বাড়ে না; আসল খেলা হলো দর্শকের না বলা সমস্যার সঠিক সমাধান দেওয়া।</textarea>
+            </div>
+        </section>
+
+        <!-- Generated Output Section -->
+        <section>
+            <h2 class="section-heading">Generated Output Prompts</h2>
+            
+            <!-- Prompt #1 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #1</span>
+                </div>
+                <textarea id="prompt1Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt1Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #2 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #2</span>
+                </div>
+                <textarea id="prompt2Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt2Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #3 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #3</span>
+                </div>
+                <textarea id="prompt3Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt3Output', this)">Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        // Prompt Templates with exact text preservation
+        const template1 = `নিচের কনটেন্টটি মনোযোগ দিয়ে রিভিউ করো। কনটেন্টের মধ্যে থেকে এমন কিছু tweetable statement চিহ্নিত করো, যেগুলো পাঠকের প্রচলিত ভাবনাকে প্রশ্ন করতে পারে, নতুন দৃষ্টিভঙ্গি তৈরি করতে পারে অথবা নতুন কিছু জানার কৌতূহল জাগাতে পারে।
+
+বিশেষভাবে এমন বক্তব্য খুঁজবে, যেগুলোর মধ্যে স্বতন্ত্র চিন্তা, অপ্রচলিত দৃষ্টিভঙ্গি, নতুন strategy, method বা কোনো বিষয়ের পেছনের অজানা mechanism প্রকাশ পায়।
+
+প্রতিটি statement এমন হওয়া উচিত, যাতে পাঠক অনুভব করেন, এখানে প্রচলিত কথার পুনরাবৃত্তি নয়, বরং চিন্তার একটি আলাদা ধরন বা নতুন কিছু বোঝার সুযোগ রয়েছে।
+
+নির্দেশনা:
+- মূল কনটেন্টে সত্যিই আছে, এমন বক্তব্যই বেছে ন
+- সাধারণ, গতানুগতিক বা শুধু অনুপ্রেরণামূলক বক্তব্য এড়িয়ে চলবেবক্তব্যকে সংক্ষিপ্ত, স্পষ্ট, স্বতন্ত্র এবং মনে রাখার মতো করে উপস্থাপন করবে।
+- প্রয়োজনে বক্তব্যের ভাষা পরিমার্জন করতে পারো, তবে মূল অর্থ ও বক্তব্যের স্বাতন্ত্র্য বজায় রাখবেনিজে থেকে নতুন ধারণা যোগ করে বক্তব্য তৈরি করবে না।
+প্রতিটি statement-এর পাশে সংক্ষেপে ব্যাখ্যা করবে, সেটি কেন পাঠকের ভাবনায় নতুন dimension বা কৌতূহল যোগ করতে পারে।
+কনটেন্ট:
+
+[এখানে আপনার কনটেন্ট পেস্ট করুন]`;
+
+        const template2 = `নিচের Tweetable Statement-টিকে কেন্দ্র করে সোশ্যাল মিডিয়া পোস্ট তৈরির সম্ভাবনা বিশ্লেষণ করো।
+
+আমার উদ্দেশ্য হলো, একই মূল বক্তব্য থেকে যত ধরনের অর্থবহ ও স্বতন্ত্র পোস্ট তৈরি করা সম্ভব, সেগুলি তৈরি করা। পোস্টের সংখ্যা বাড়ানোর জন্য একই কথা ঘুরিয়ে-ফিরিয়ে লিখবে না।
+
+প্রথমে নিচের চার ধরনের পোস্ট তৈরির সম্ভাবনা আলাদাভাবে যাচাই করো।
+
+Perspective Post — নতুন দৃষ্টিভঙ্গি থেকে বিষয়টিকে উপস্থাপন করা
+2. Insight Post — বক্তব্যের পেছনের কারণ, যুক্তি বা অন্তর্নিহিত mechanism ব্যাখ্যা করা।
+
+3. Method Post — বক্তব্যের সঙ্গে সম্পর্কিত ব্যবহারিক পদ্ধতি, কৌশল বা সিদ্ধান্ত নেওয়ার নিয়ম তুলে ধরা।
+
+4. Belief-Challenging Post — প্রচলিত কোনো ধারণাকে প্রশ্ন করে বিকল্প দৃষ্টিভঙ্গি তুলে ধরা।
+
+প্রতিটি ধরনের ক্ষেত্রে:
+
+- মূল কনটেন্টে পর্যাপ্ত ভিত্তি থাকলে সেই ধরনের একটি স্বতন্ত্র সোশ্যাল মিডিয়া পোস্ট লেখপোস্টটি এমনভাবে লেখো, যাতে পাঠক নতুন কিছু বুঝতে পারেন, নতুনভাবে ভাবতে পারেন অথবা কোনো ব্যবহারিক পদ্ধতি সম্পর্কে জানতে পারেন।
+- একটি আকর্ষণীয় hook দিয়ে শুরু করো এবং সহজ, স্বাভাবিক ভাষায় মূল বক্তব্যটি উন্মোচন করমূল কনটেন্টে সমর্থন নেই, এমন তথ্য, যুক্তি, পদ্ধতি বা দাবি তৈরি কোরো না।
+- একই বক্তব্যকে শুধু ভাষা বদলে একাধিক পোস্ট হিসেবে উপস্থাপন কোরো না।
+
+কোনো ধরনের পোস্ট তৈরির পর্যাপ্ত ভিত্তি না থাকলে সেই পোস্ট তৈরি কোরো না। তার পরিবর্তে সংক্ষেপে ব্যাখ্যা করো:
+
+- কেন এই ধরনের পোস্ট তৈরির পর্যাপ্ত ভিত্তি নেই।
+- মূল কনটেন্টে কোন তথ্য, যুক্তি, ব্যাখ্যা বা উপাদানের অভাব রয়েছে।কী ধরনের অতিরিক্ত কনটেন্ট বা চিন্তার বিকাশ ঘটালে ভবিষ্যতে এই ধরনের পোস্ট তৈরি করা সম্ভব হতে পারে।
+
+শেষে একটি সংক্ষিপ্ত মূল্যায়ন দাও:
+কোন ধরনের পোস্ট তৈরির জন্য মূল বক্তব্যটি সবচেয়ে শক্তিশালী এবং কোন ধরনের পোস্টের সম্ভাবনা বাড়াতে কনটেন্টে আরও কাজ করা প্রয়োজন।
+
+Tweetable Statement:
+[এখানে নির্বাচিত statement বসান]
+
+মূল কনটেন্ট:
+[এখানে মূল কনটেন্ট বসান]`;
+
+        const template3 = `নিচের Tweetable Statement-টিকে কেন্দ্র করে চারটি স্বতন্ত্র সোশ্যাল মিডিয়া পোস্ট লেখো।
+
+প্রতিটি পোস্টে একই মূল বক্তব্য ব্যবহার করবে, কিন্তু দৃষ্টিভঙ্গি ও উপস্থাপনা আলাদা হবে।
+
+Post 1 — Perspective Post
+মূল বক্তব্যটিকে একটি নতুন দৃষ্টিভঙ্গি থেকে উপস্থাপন করো, যাতে পাঠক বিষয়টিকে অন্যভাবে দেখতে পারেন।
+
+Post 2 — Insight Post
+মূল বক্তব্যের পেছনের কারণ, যুক্তি বা অন্তর্নিহিত mechanism ব্যাখ্যা করা, যাতে পাঠক বিষয়টি আরও গভীরভাবে বুঝতে পারেন।
+
+Post 3 — Method Post
+মূল বক্তব্যের সঙ্গে সম্পর্কিত কোনো ব্যবহারিক পদ্ধতি, কৌশল বা সিদ্ধান্ত নেওয়ার নিয়ম তুলে ধরো। মূল কনটেন্টে সমর্থন নেই, এমন পদ্ধতি তৈরি কোরো না।
+
+Post 4 — Belief-Challenging Post
+বিষয়টি সম্পর্কে প্রচলিত কোনো ধারণাকে প্রশ্ন করো এবং যুক্তির সাহায্যে নতুন দৃষ্টিভঙ্গিটি তুলে ধরো।
+
+প্রতিটি পোস্টের জন্য:
+- একটি আকর্ষণীয় hook দিয়ে শসহজ, স্বাভাবিক ও কথোপকথনমূলক ভাষা ব্যবহার করো।
+- মূল বক্তব্যকে শুধু পুনরাবৃত্তি না করে তার অর্থ ও গুরুত্ব উন্মোচন করো।
+- পাঠককে নতুন কিছু বুঝতে বা ভাবতে সাহায্য করো।
+- অপ্রয়োজনীয় নাটকীয়তা, গতানুগতিক motivational কথা এবং জোর করে CTA যোগ করা এড়িয়ে মূল কনটেন্টের বাইরে গিয়ে তথ্য, যুক্তি বা দাবি তৈরি কোরো না।চারটি পোস্টের মধ্যে একই কথা বা যুক্তির অপ্রয়োজনীয় পুনরাবৃত্তি কোরো না।
+
+প্রতিটি পোস্টের শেষে এক লাইনে উল্লেখ করো, পোস্টটির মূল উদ্দেশ্য কী।
+
+Tweetable Statement:
+[এখানে নির্বাচিত statement বসান]
+
+মূল কনটেন্ট:
+[এখানে মূল কনটেন্ট বসান]
+
+চলো।
+ু
+রু করো।
+ো।
+
+ো।
+।
+।
+।
+েবে।`;
+
+        // Function to update all prompts in real-time
+        function updatePrompts() {
+            const content = document.getElementById('inputContent').value;
+            const statement = document.getElementById('inputStatement').value;
+
+            document.getElementById('prompt1Output').value = template1
+                .replace('[এখানে আপনার কনটেন্ট পেস্ট করুন]', content);
+
+            document.getElementById('prompt2Output').value = template2
+                .replace('[এখানে নির্বাচিত statement বসান]', statement)
+                .replace('[এখানে মূল কনটেন্ট বসান]', content);
+
+            document.getElementById('prompt3Output').value = template3
+                .replace('[এখানে নির্বাচিত statement বসান]', statement)
+                .replace('[এখানে মূল কনটেন্ট বসান]', content);
+        }
+
+        // Reset individual input field and refresh prompt previews
+        function resetField(fieldId) {
+            document.getElementById(fieldId).value = '';
+            updatePrompts();
+        }
+
+        // Copy functionality with visual feedback
+        function copyPrompt(elementId, btn) {
+            const outputBox = document.getElementById(elementId);
+
+            outputBox.select();
+            outputBox.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+
+                window.getSelection().removeAllRanges();
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        }
+
+        // Initialize prompt generation on page load
+        window.onload = updatePrompts;
+    </script>
+</body>
+</html>
