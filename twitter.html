@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Project - Prompt Workspace</title>
+    <link rel="icon" href="spm.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --surface-color: #ffffff;
+            --border-color: #e2dfdc;
+            --border-focus: #706b63;
+            --text-main: #2c2a29;
+            --text-muted: #6e6963;
+            --accent: #1a1918;
+            --accent-hover: #383532;
+            --success: #2e7d32;
+            --header-color: #4338ca;
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .document-container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Header Styles */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        .doc-title {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--header-color);
+            margin-bottom: 8px;
+        }
+
+        .doc-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Section Layout */
+        .section-heading {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 36px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .reset-field-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-field-btn:hover {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .doc-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .doc-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background: var(--surface-color);
+            box-shadow: 0 0 0 3px rgba(112, 107, 99, 0.1);
+        }
+
+        /* Output Box Styling */
+        .output-card {
+            margin-top: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .output-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .prompt-preview {
+            width: 100%;
+            min-height: 200px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            resize: vertical;
+            white-space: pre-wrap;
+            margin-bottom: 16px;
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        /* Footer */
+        .doc-footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 8px;
+            }
+            .document-container {
+                padding: 24px 16px;
+            }
+            .doc-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <!-- Header -->
+        <header class="doc-header">
+            <h1 class="doc-title">Twitter Project</h1>
+            <p class="doc-subtitle">(post finder)</p>
+        </header>
+
+        <!-- User Inputs Section -->
+        <section>
+            <h2 class="section-heading">Variables & Inputs</h2>
+            
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputTopic">TARGET TOPIC:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputTopic')">Reset Field</button>
+                </div>
+                <textarea id="inputTopic" class="doc-input" placeholder="[Insert Topic of Discussion]" oninput="updatePrompts()">Generative AI Workflow Automation</textarea>
+            </div>
+
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputKeywords">RELATED KEYWORDS OR CONCEPTS (Optional):</label>
+                    <button class="reset-field-btn" onclick="resetField('inputKeywords')">Reset Field</button>
+                </div>
+                <textarea id="inputKeywords" class="doc-input" placeholder="[Insert Keywords or Related Concepts]" oninput="updatePrompts()">AI agents, prompt chaining, automated pipelines</textarea>
+            </div>
+
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputQueries">SEARCH QUERIES OR PHRASES (Optional):</label>
+                    <button class="reset-field-btn" onclick="resetField('inputQueries')">Reset Field</button>
+                </div>
+                <textarea id="inputQueries" class="doc-input" placeholder="[Insert Search Queries Here]" oninput="updatePrompts()">how to automate tasks with AI, LLM workflow tools</textarea>
+            </div>
+
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputAccounts">KNOWN ACCOUNTS, HASHTAGS, OR SEARCH QUERIES (Optional):</label>
+                    <button class="reset-field-btn" onclick="resetField('inputAccounts')">Reset Field</button>
+                </div>
+                <textarea id="inputAccounts" class="doc-input" placeholder="[Insert Relevant Accounts, Hashtags, or Search Queries]" oninput="updatePrompts()">#AITools, @OpenAI, #BuildInPublic</textarea>
+            </div>
+        </section>
+
+        <!-- Generated Output Section -->
+        <section>
+            <h2 class="section-heading">Generated Output Prompts</h2>
+            
+            <!-- Prompt #1 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #1</span>
+                </div>
+                <textarea id="prompt1Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt1Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #2 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #2</span>
+                </div>
+                <textarea id="prompt2Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt2Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #3 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #3</span>
+                </div>
+                <textarea id="prompt3Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt3Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #4 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #4</span>
+                </div>
+                <textarea id="prompt4Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt4Output', this)">Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        // Prompt Templates with exact text preservation
+        const template1 = `ROLE
+
+Act as an X (formerly Twitter) Research and Source Discovery Assistant.
+
+OBJECTIVE
+
+Find and collect relevant individual X posts published within the last 24 hours about the following target topic of discussion.
+
+TARGET TOPIC:
+[Insert Topic of Discussion]
+
+RELATED KEYWORDS OR CONCEPTS (Optional):
+[Insert Keywords or Related Concepts]
+
+SEARCH QUERIES OR PHRASES (Optional):
+[Insert Search Queries Here]
+
+RESEARCH INSTRUCTIONS
+
+Search for:
+- Public X posts explicitly discussing the target topic.
+- Posts discussing related concepts, even when the exact topic phrase is absent.
+- Posts describing relevant problems, questions, frustrations, experiences, goals, opinions, or desired outcomes.
+- Posts using alternative terminology, related expressions, or different ways of describing the same underlying subject.
+- Unexpected but potentially relevant discussions that may reveal new questions or perspectives.
+
+POST COLLECTION REQUIREMENTS
+
+For each relevant post, provide:
+1. Post text or a brief identifying excerpt.
+2. Direct URL to the individual X post.
+3. Author's public username, if verifiable.
+4. Publication date and time, if verifiable.
+5. A brief explanation of its relevance to the target topic.
+
+Prioritize direct URLs to individual posts over profile pages, search-result pages, topic pages, or articles discussing X posts.
+
+RESEARCH EXPANSION
+
+Use additional search phrases and related keywords when useful. Identify new expressions, concepts, questions, and research directions discovered during the search that could help uncover additional relevant posts.
+
+VERIFICATION AND ACCURACY
+
+- Include only posts that can be accessed or otherwise reliably verified.
+- Do not invent post text, usernames, URLs, publication times, or engagement figures.
+- Clearly distinguish verified posts from search results that could not be independently verified.
+- Do not treat reposts, quoted posts, and replies as original standalone posts without identifying their actual type.
+- Avoid duplicate post URLs.
+- Do not assume that every post is accessible or indexed by the available search method.
+- Report limitations that prevent comprehensive coverage.
+- Do not claim that all relevant posts have been found unless the search coverage supports that conclusion.
+
+NOTEBOOKLM SOURCE REQUIREMENT
+
+Prioritize collecting actual individual X post URLs that can be added to this notebook as sources. Where possible, provide one direct URL per post and keep the list easy to copy.
+
+If direct access to X or live search is unavailable, state that limitation clearly. Do not substitute invented search results for actual posts.
+
+OUTPUT
+
+A. Relevant X posts, with their direct URLs and available verification details.
+
+B. Additional search phrases, related keywords, and research directions discovered during the search.
+
+C. Research limitations and verification gaps.`;
+
+        const template2 = `OBJECTIVE
+
+Create a clean, deduplicated bullet list of all relevant individual X posts published within the last 24 hours that have been identified during the research.
+
+TARGET TOPIC:
+[Insert Topic of Discussion]
+
+Use the available research results and accessible notebook sources to identify relevant posts.
+
+For each post, provide:
+- Post text or a concise identifying excerpt.
+- Author's X username, if verifiable.
+- Publication date and time, if verifiable.
+- Direct URL to the individual X post.
+
+REQUIREMENTS
+
+- Include only posts published within the last 24 hours, measured backward from the time of research.
+- Include posts about the target topic and relevant related concepts.
+- Include direct URLs to individual posts, not profile pages, search-result pages, or topic pages.
+- Do not include duplicate URLs.
+- Do not invent or guess post details, usernames, URLs, or publication times.
+- Distinguish original posts, replies, quoted posts, and reposts where relevant and verifiable.
+- Do not include a post merely because it mentions a related keyword; its actual discussion must be relevant.
+- If publication time cannot be verified, do not present the post as confirmed to be within the time window.
+- If no relevant posts are found in the available research, state that clearly.
+- If the available notebook sources do not support comprehensive coverage, disclose that limitation.
+
+PRESENTATION
+
+Present the results as a clean, easy-to-copy bullet list, with each post's identifying text linked to its direct X URL.
+
+Keep commentary to a minimum. Do not add extended thematic analysis or unrelated recommendations.
+
+IMPORTANT
+
+Do not claim to have performed a new live search unless the available tools actually support it. If the task requires searching beyond the available notebook sources, state what additional access is needed.`;
+
+        const template3 = `ROLE
+
+Act as an X (formerly Twitter) Research Analyst specializing in topic discovery, audience research, real-world experiences, and emerging discussion opportunities.
+
+OBJECTIVE
+
+Discover and analyze relevant public X posts published within the last 24 hours, using the specified research inputs and available search methods.
+
+TARGET TOPIC OF DISCUSSION:
+[Insert Topic of Discussion]
+
+RESEARCH TIME WINDOW:
+The last 24 hours, measured backward from the time the research is conducted.
+
+RELATED KEYWORDS OR CONCEPTS (Optional):
+[Insert Keywords or Related Concepts]
+
+KNOWN ACCOUNTS, HASHTAGS, OR SEARCH QUERIES (Optional):
+[Insert Relevant Accounts, Hashtags, or Search Queries]
+
+RESEARCH INSTRUCTIONS
+
+1. DISCOVER RELEVANT POSTS
+
+Search for public X posts that:
+- Explicitly mention or discuss the target topic.
+- Explore related concepts without using the exact topic phrase.
+- Describe relevant problems, questions, frustrations, personal experiences, opinions, goals, or desired outcomes.
+- Use alternative terminology, indirect expressions, or different ways of describing the same underlying subject.
+- Raise unexpected questions or discuss potentially relevant issues that may reveal research opportunities not considered in advance.
+
+Prioritize substantive relevance over superficial keyword matches.
+
+Use multiple relevant search phrases where the available tools permit. Explore alternative wording and related concepts rather than relying on a single query.
+
+2. VERIFY AND DOCUMENT EACH POST
+
+For every relevant post, provide:
+- Post text or a concise identifying excerpt.
+- Author's public username, if verifiable.
+- Direct URL to the individual post.
+- Publication date and time, where verifiable.
+- Post type: original post, reply, quote post, or repost, where identifiable.
+- Main topic of discussion.
+- The specific problem, question, experience, frustration, opinion, or desired outcome expressed, where applicable.
+
+Include only posts that can be reliably identified as relevant to the specified time window. If a post's publication time cannot be verified, place it in a separate unverified section rather than treating it as a confirmed result.
+
+Do not invent post text, usernames, URLs, timestamps, engagement metrics, or other details.
+
+3. IDENTIFY DISCUSSION PATTERNS
+
+Analyze the collected posts to identify:
+- Recurring themes and concerns.
+- Common problems and unanswered questions.
+- Repeated frustrations, obstacles, and unmet needs.
+- Different experiences or conflicting opinions.
+- Emerging interests and unusual discussion topics.
+- Alternative expressions people use to describe the target topic.
+- Unexpected connections between the target topic and other subjects.
+
+Distinguish patterns supported by multiple independent posts from observations based on a single post.
+
+Do not interpret repeated reposts of the same content as independent evidence of a recurring pattern. Do not present a small or potentially biased sample as proof of a widespread trend.
+
+4. DISCOVER ADDITIONAL SEARCH OPPORTUNITIES
+
+Based on the posts examined, identify:
+- Additional search phrases and related keywords.
+- Alternative expressions and terminology used by authors.
+- Related concepts that could reveal additional relevant posts.
+- Relevant public accounts or hashtags worth investigating, where identifiable.
+- Specific research directions that could uncover questions, experiences, or perspectives not yet represented in the collected results.
+
+For each suggestion, briefly explain why it may be useful.
+
+Clearly distinguish between:
+A. Search opportunities derived from actual posts examined.
+B. Additional research hypotheses suggested by reasoning but not yet verified against actual posts.
+
+Do not claim that a suggested query will produce relevant results unless it has been tested.
+
+5. RESEARCH COVERAGE AND LIMITATIONS
+
+Document the research process as accurately as the available tools allow.
+
+Where practical:
+- Use multiple search phrases and alternative terminology.
+- Search relevant public posts and accessible results from relevant accounts or hashtags.
+- Track the queries used and the sources actually inspected.
+- Remove duplicate URLs.
+- Record inaccessible posts, search failures, and uncertain publication times.
+
+Do not claim comprehensive coverage of X. Explain what was searched, what could be verified, and what may have been missed.
+
+If live X search or direct post access is unavailable, explicitly state that limitation instead of fabricating results or implying that a live search was completed.
+
+OUTPUT FORMAT
+
+A. RESEARCH OVERVIEW
+- Target topic.
+- Research date, time, and timezone.
+- Time window covered.
+- Search queries and methods actually used.
+- Sources or public accounts examined, where applicable.
+- Number of unique relevant posts verified.
+- Important coverage limitations.
+
+B. VERIFIED RELEVANT POSTS
+
+Present a table with:
+1. Post Text or Identifying Excerpt
+2. Author Username
+3. Publication Time
+4. Post Type
+5. Main Discussion Topic
+6. Problem, Question, Experience, or Audience Need
+7. Direct Post URL
+
+C. UNVERIFIED OR INACCESSIBLE RESULTS
+
+List potentially relevant results that could not be fully verified, explaining exactly what remains uncertain. Do not count these as verified posts.
+
+D. DISCUSSION ANALYSIS
+
+Summarize the recurring themes, questions, problems, frustrations, experiences, opinions, and unexpected observations found in the verified posts.
+
+E. ADDITIONAL SEARCH OPPORTUNITIES
+
+List new search phrases, related keywords, alternative expressions, relevant public accounts or hashtags, and research directions. Distinguish observed evidence from untested hypotheses.
+
+F. RESEARCH LIMITATIONS
+
+Explain the limitations affecting discovery, verification, and completeness.
+
+FINAL REQUIREMENT
+
+Base factual findings on actual, accessible or otherwise reliably verifiable X posts. Clearly separate observed evidence, interpretation, and proposed research directions. Never invent posts or claim that the research is exhaustive when the evidence does not support that conclusion.`;
+
+        const template4 = `Search for relevant public posts published within the last 24 hours on X (formerly Twitter) about the following target topic.
+
+TARGET TOPIC:
+[Insert Topic of Discussion]
+
+RELATED KEYWORDS OR CONCEPTS (Optional):
+[Insert Related Keywords or Concepts]
+
+Search for:
+- Posts explicitly discussing the target topic.
+- Posts exploring related concepts without using the exact topic phrase.
+- Posts describing relevant problems, questions, frustrations, experiences, opinions, goals, or desired outcomes.
+- Unexpected discussions that may reveal new questions or research opportunities.
+
+For each relevant post, provide:
+- Post text or a concise identifying excerpt.
+- Author's public username, if verifiable.
+- Publication time, if verifiable.
+- Direct URL to the individual X post.
+- Main topic and its relevance to the target topic.
+
+Avoid duplicate URLs. Do not invent posts, usernames, URLs, publication times, or other details.
+
+Also identify additional search phrases, related keywords, alternative expressions, and research directions discovered during the search.
+
+Distinguish between findings based on actual posts and suggestions that remain untested. Report relevant search and verification limitations. Do not claim that all relevant posts have been found.
+
+If live X search is unavailable, state that clearly and do not present hypothetical search results as actual posts.`;
+
+        // Function to update all prompts in real-time
+        function updatePrompts() {
+            const topic = document.getElementById('inputTopic').value;
+            const keywords = document.getElementById('inputKeywords').value;
+            const queries = document.getElementById('inputQueries').value;
+            const accounts = document.getElementById('inputAccounts').value;
+
+            document.getElementById('prompt1Output').value = template1
+                .replaceAll('[Insert Topic of Discussion]', topic)
+                .replaceAll('[Insert Keywords or Related Concepts]', keywords)
+                .replaceAll('[Insert Search Queries Here]', queries);
+
+            document.getElementById('prompt2Output').value = template2
+                .replaceAll('[Insert Topic of Discussion]', topic);
+
+            document.getElementById('prompt3Output').value = template3
+                .replaceAll('[Insert Topic of Discussion]', topic)
+                .replaceAll('[Insert Keywords or Related Concepts]', keywords)
+                .replaceAll('[Insert Relevant Accounts, Hashtags, or Search Queries]', accounts);
+
+            document.getElementById('prompt4Output').value = template4
+                .replaceAll('[Insert Topic of Discussion]', topic)
+                .replaceAll('[Insert Related Keywords or Concepts]', keywords);
+        }
+
+        // Reset individual input field and refresh prompt previews
+        function resetField(fieldId) {
+            document.getElementById(fieldId).value = '';
+            updatePrompts();
+        }
+
+        // Copy functionality with visual feedback
+        function copyPrompt(elementId, btn) {
+            const outputBox = document.getElementById(elementId);
+
+            outputBox.select();
+            outputBox.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+
+                window.getSelection().removeAllRanges();
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        }
+
+        // Initialize prompt generation on page load
+        window.onload = updatePrompts;
+    </script>
+</body>
+</html>

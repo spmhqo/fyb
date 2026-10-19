@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Buyers - Prompt Workspace</title>
+    <link rel="icon" href="spm.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --surface-color: #ffffff;
+            --border-color: #e2dfdc;
+            --border-focus: #706b63;
+            --text-main: #2c2a29;
+            --text-muted: #6e6963;
+            --accent: #1a1918;
+            --accent-hover: #383532;
+            --success: #2e7d32;
+            --header-color: #4338ca;
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .document-container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Header Styles */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        .doc-title {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--header-color);
+            margin-bottom: 8px;
+        }
+
+        .doc-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Section Layout */
+        .section-heading {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 36px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .reset-field-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-field-btn:hover {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .doc-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .doc-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background: var(--surface-color);
+            box-shadow: 0 0 0 3px rgba(112, 107, 99, 0.1);
+        }
+
+        /* Output Box Styling */
+        .output-card {
+            margin-top: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .output-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .prompt-preview {
+            width: 100%;
+            min-height: 200px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            resize: vertical;
+            white-space: pre-wrap;
+            margin-bottom: 16px;
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        /* Footer */
+        .doc-footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 8px;
+            }
+            .document-container {
+                padding: 24px 16px;
+            }
+            .doc-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <!-- Header -->
+        <header class="doc-header">
+            <h1 class="doc-title">Find Your Buyers</h1>
+            <p class="doc-subtitle">(on social media)</p>
+        </header>
+
+        <!-- User Inputs Section -->
+        <section>
+            <h2 class="section-heading">Variables & Inputs</h2>
+            
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputBuyers">My buyers are:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputBuyers')">Reset Field</button>
+                </div>
+                <textarea id="inputBuyers" class="doc-input" placeholder="[WHO THEY ARE]" oninput="updatePrompts()">Solopreneurs and indie creators launching digital info-products</textarea>
+            </div>
+
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputProblem">Their problem is:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputProblem')">Reset Field</button>
+                </div>
+                <textarea id="inputProblem" class="doc-input" placeholder="[THE PROBLEM]" oninput="updatePrompts()">Struggling to find where their target audience hangs out online without spending a fortune on ads</textarea>
+            </div>
+
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputResult">My product helps them:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputResult')">Reset Field</button>
+                </div>
+                <textarea id="inputResult" class="doc-input" placeholder="[THE RESULT]" oninput="updatePrompts()">Discover active discussion communities and use organic search queries to locate early buyers</textarea>
+            </div>
+        </section>
+
+        <!-- Generated Output Section -->
+        <section>
+            <h2 class="section-heading">Generated Output Prompts</h2>
+            
+            <!-- Prompt #1 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #1</span>
+                </div>
+                <textarea id="prompt1Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt1Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #2 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #2</span>
+                </div>
+                <textarea id="prompt2Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt2Output', this)">Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        // Prompt Templates with exact text preservation
+        const template1 = `I'm trying to find real potential buyers for a small information product I'm testing.
+
+My buyers are: 
+[WHO THEY ARE]
+
+Their problem is: 
+[THE PROBLEM]
+
+My product helps them: 
+[THE RESULT]
+
+I want to find places online where people with this specific problem are likely to be talking, asking questions or looking for help.
+
+Give me a practical search plan covering Facebook Groups, Reddit, forums, YouTube and ordinary Google searches where appropriate.
+
+For each one, give me specific words and phrases I can type into the search box to find relevant communities and conversations.
+
+Also give me 10 phrases that somebody with this problem might actually use when talking about it, so I can search for those phrases inside groups and communities.
+
+Don't invent specific groups, forums or communities and tell me they exist. I will find and check those myself.
+
+My goal at this stage is simply to locate real people who appear to have this problem, not to sell anything to them yet.`;
+
+        const template2 = `I need highly specific search phrases for finding people who are actively struggling with a problem.
+
+Buyer:
+[WHO THEY ARE]
+
+Problem:
+[THE PROBLEM]
+
+Result they want:
+[THE RESULT]
+
+Give me:
+- 15 short search phrases they might type into Google
+- 15 phrases they might write in a Facebook group, Reddit post or forum
+- 10 phrases that suggest frustration
+- 10 phrases that suggest they have already spent money or tried solutions
+- 10 phrases that suggest buying intent, such as asking for a recommendation, guide, course, checklist or solution
+
+Write them in natural everyday language, not marketing language.
+
+Do not invent communities or claim these phrases are popular. I will use them as searches to find real evidence.`;
+
+        // Function to update all prompts in real-time
+        function updatePrompts() {
+            const buyers = document.getElementById('inputBuyers').value;
+            const problem = document.getElementById('inputProblem').value;
+            const result = document.getElementById('inputResult').value;
+
+            document.getElementById('prompt1Output').value = template1
+                .replace('[WHO THEY ARE]', buyers)
+                .replace('[THE PROBLEM]', problem)
+                .replace('[THE RESULT]', result);
+
+            document.getElementById('prompt2Output').value = template2
+                .replace('[WHO THEY ARE]', buyers)
+                .replace('[THE PROBLEM]', problem)
+                .replace('[THE RESULT]', result);
+        }
+
+        // Reset individual input field and refresh prompt previews
+        function resetField(fieldId) {
+            document.getElementById(fieldId).value = '';
+            updatePrompts();
+        }
+
+        // Copy functionality with visual feedback
+        function copyPrompt(elementId, btn) {
+            const outputBox = document.getElementById(elementId);
+
+            outputBox.select();
+            outputBox.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+
+                window.getSelection().removeAllRanges();
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        }
+
+        // Initialize prompt generation on page load
+        window.onload = updatePrompts;
+    </script>
+</body>
+</html>

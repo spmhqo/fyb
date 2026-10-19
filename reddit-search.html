@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Project - Prompt Workspace</title>
+    <link rel="icon" href="spm.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --surface-color: #ffffff;
+            --border-color: #e2dfdc;
+            --border-focus: #706b63;
+            --text-main: #2c2a29;
+            --text-muted: #6e6963;
+            --accent: #1a1918;
+            --accent-hover: #383532;
+            --success: #2e7d32;
+            --header-color: #4338ca;
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .document-container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 48px 40px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Header Styles */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        .doc-title {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--header-color);
+            margin-bottom: 8px;
+        }
+
+        .doc-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Section Layout */
+        .section-heading {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 36px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .reset-field-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-field-btn:hover {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .doc-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .doc-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background: var(--surface-color);
+            box-shadow: 0 0 0 3px rgba(112, 107, 99, 0.1);
+        }
+
+        /* Output Box Styling */
+        .output-card {
+            margin-top: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .output-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .prompt-preview {
+            width: 100%;
+            min-height: 200px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            resize: vertical;
+            white-space: pre-wrap;
+            margin-bottom: 16px;
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        /* Footer */
+        .doc-footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 8px;
+            }
+            .document-container {
+                padding: 24px 16px;
+            }
+            .doc-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <!-- Header -->
+        <header class="doc-header">
+            <h1 class="doc-title">Reddit Project</h1>
+            <p class="doc-subtitle">(post finder)</p>
+        </header>
+
+        <!-- User Inputs Section -->
+        <section>
+            <h2 class="section-heading">Variables & Inputs</h2>
+            
+            <div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputTopic">Target Topic:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputTopic')">Reset Field</button>
+                </div>
+                <textarea id="inputTopic" class="doc-input" placeholder="[Insert Topic of Discussion]" oninput="updatePrompts()">Artificial Intelligence Tools</textarea>
+            </div>
+
+<div class="input-group">
+                <div class="input-header-row">
+                    <label class="input-label" for="inputSubreddits">Subreddits:</label>
+                    <button class="reset-field-btn" onclick="resetField('inputSubreddits')">Reset Field</button>
+                </div>
+                <textarea id="inputSubreddits" class="doc-input" placeholder="[Insert Subreddits Here]" oninput="updatePrompts()">r/artificial, r/MachineLearning, r/ChatGPT</textarea>
+            </div>
+        </section>
+
+        <!-- Generated Output Section -->
+        <section>
+            <h2 class="section-heading">Generated Output Prompts</h2>
+            
+            <!-- Prompt #1 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #1</span>
+                </div>
+                <textarea id="prompt1Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt1Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #2 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #2</span>
+                </div>
+                <textarea id="prompt2Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt2Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #3 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #3</span>
+                </div>
+                <textarea id="prompt3Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt3Output', this)">Copy to Clipboard</button>
+            </div>
+
+            <!-- Prompt #4 -->
+            <div class="output-card">
+                <div class="output-header">
+                    <span class="output-title">Prompt #4</span>
+                </div>
+                <textarea id="prompt4Output" class="prompt-preview" readonly></textarea>
+                <button class="copy-btn" onclick="copyPrompt('prompt4Output', this)">Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        // Prompt Templates with exact text preservation
+        const template1 = `Find and collect relevant Reddit posts published within the last 24 hours about the following target topic of discussion.
+
+Target Topic:
+[Insert Topic of Discussion]
+
+Subreddits:
+[Insert Subreddits Here]
+
+Search for:
+- Posts explicitly discussing the target topic.
+- Posts discussing related concepts, even when the exact topic phrase is absent.
+- Posts describing relevant problems, questions, frustrations, experiences, goals, or desired outcomes.
+
+Prioritize individual Reddit post URLs over general subreddit pages, search-result pages, or articles about the topic.
+
+For each relevant post, provide its title, direct URL, subreddit, verifiable publication time, and a brief explanation of its relevance.
+
+Use additional search phrases when useful. Clearly distinguish verified posts from unverified search results.
+
+Prioritize collecting actual source URLs that can be added to this notebook. Do not invent posts, URLs, or publication times. Report any limitations that prevent comprehensive coverage.
+
+Also provide additional search phrases, related keywords, and research directions discovered during the search.
+
+Do not claim that all relevant posts have been found unless the search coverage supports that conclusion.`;
+
+        const template2 = `Create a bullet list of all relevant Reddit posts published within the last 24 hours that you identify during the research.
+
+For each post, provide:
+- Post Title
+- Subreddit Name
+- Publication Time, if verifiable
+- Direct URL to the individual Reddit post
+
+Requirements:
+- Include only posts published within the last 24 hours.
+- Include the direct URL of each individual post, not the subreddit homepage or search results page.
+- Include only relevant posts related to the target topic, including discussions of related concepts.
+- Do not include duplicate URLs.
+- Verify publication times and URLs wherever possible.
+- Do not invent or guess post details or URLs.
+- If no relevant posts are found, state that clearly.
+- If complete coverage cannot be verified, report the limitation instead of claiming that all relevant posts have been found.
+
+Present the results as a clean, easy-to-copy bullet list, with each post's title linked to its direct Reddit URL.`;
+
+        const template3 = `ROLE
+
+Act as a Reddit Research Analyst specializing in topic discovery, audience research, and the identification of emerging discussion opportunities.
+
+OBJECTIVE
+
+Find and analyze recent Reddit posts related to the following target topic of discussion, using the specified subreddits as the primary research sources.
+
+TARGET TOPIC OF DISCUSSION:
+[Insert Topic of Discussion]
+
+RESEARCH TIME WINDOW:
+The last 24 hours, measured backward from the time the research is conducted.
+
+SUBREDDITS:
+[Insert Subreddits Here]
+
+RESEARCH INSTRUCTIONS
+
+1. Discover Relevant Posts
+
+Search the specified subreddits for posts published within the last 24 hours that discuss the target topic.
+
+Include:
+- Posts that explicitly mention the target topic.
+- Posts that discuss related concepts without explicitly using the target topic's exact wording.
+- Posts that describe relevant problems, questions, experiences, frustrations, goals, or desired outcomes.
+- Posts that use alternative terminology, related expressions, or different ways of describing the same underlying subject.
+
+Prioritize relevance to the target topic over superficial keyword matches.
+
+2. Verify and Document Each Post
+
+For each relevant post, provide:
+- Post title.
+- Subreddit name.
+- Direct URL to the post.
+- Publication time or date, where verifiable.
+- Main topic of discussion.
+- Brief summary of the discussion.
+- The specific problem, question, experience, frustration, or desired outcome expressed by the author, where applicable.
+
+Include only posts that fall within the specified time window. Do not invent posts, URLs, publication times, or post details.
+
+3. Identify Discussion Patterns
+
+Analyze the collected posts to identify:
+- Recurring themes or concerns.
+- Common problems and unanswered questions.
+- Repeated frustrations, obstacles, and unmet needs.
+- Emerging interests or unusual discussion topics.
+- Differences in how people approach or describe the target topic.
+
+Distinguish patterns supported by multiple posts from observations based on a single post. Do not present a small sample as proof of a widespread trend.
+
+4. Discover Additional Search Opportunities
+
+Based on the posts examined, identify:
+- Additional search phrases and related keywords.
+- Alternative expressions used by Reddit users.
+- Related concepts that may reveal relevant discussions.
+- New subreddits worth investigating, if discovered and verifiable.
+- Specific research directions that could uncover additional relevant posts.
+
+For each suggested search phrase or research direction, briefly explain its relevance to the target topic.
+
+Clearly distinguish between suggestions derived from observed posts and additional research hypotheses.
+
+5. Research Coverage and Limitations
+
+Search the specified subreddits systematically using the available search methods.
+
+Where practical, use multiple relevant search phrases and inspect individual subreddit listings, rather than relying on a single keyword search.
+
+Avoid duplicate entries when the same post is discovered through multiple searches.
+
+Report any relevant limitations, including inaccessible posts, incomplete search coverage, or uncertainty about publication times.
+
+Do not claim that every relevant post has been found unless the available evidence supports that claim.
+
+OUTPUT FORMAT
+
+A. Research Overview
+- Target topic.
+- Research time window and the time at which the search was conducted.
+- Subreddits searched.
+- Search phrases and methods used.
+- Number of relevant posts identified.
+
+B. Relevant Posts
+Present the results in a table with these columns:
+1. Post Title
+2. Subreddit
+3. Publication Time
+4. Main Discussion Topic
+5. Problem, Question, or Audience Need
+6. Post URL
+
+C. Discussion Analysis
+Summarize the main themes, problems, questions, frustrations, desired outcomes, and notable observations found in the collected posts.
+
+D. Additional Search Opportunities
+Present additional search phrases, related keywords, alternative expressions, relevant subreddits, and research directions. Explain the reasoning behind each suggestion.
+
+E. Research Limitations
+State what could not be verified, what may have been missed, and any limitations that affect the completeness of the findings.
+
+FINAL REQUIREMENT
+
+Base factual findings on actual Reddit posts that can be accessed or otherwise reliably verified. Clearly separate observed evidence from interpretation and recommendations. If no relevant posts are found, report that result honestly instead of fabricating findings.`;
+
+        const template4 = `Search the following subreddits for all new posts published in the last 24 hours that discuss manifestation, including posts that explore related concepts without explicitly using the word "[Insert Topic of Discussion]".
+
+For each relevant post, identify its main topic and note any recurring themes, problems, questions, or emerging trends.
+
+Also, identify additional search phrases, related keywords, and research directions discovered during the research that could help uncover more relevant discussions.
+
+Subreddits:
+[Insert Subreddits Here]`;
+
+        // Function to update all prompts in real-time
+        function updatePrompts() {
+            const topic = document.getElementById('inputTopic').value;
+            const subreddits = document.getElementById('inputSubreddits').value;
+
+            document.getElementById('prompt1Output').value = template1
+                .replace('[Insert Topic of Discussion]', topic)
+                .replace('[Insert Subreddits Here]', subreddits);
+
+            document.getElementById('prompt2Output').value = template2; // No placeholders inside template2 text, but keeps structure consistent
+
+            document.getElementById('prompt3Output').value = template3
+                .replace('[Insert Topic of Discussion]', topic)
+                .replace('[Insert Subreddits Here]', subreddits);
+
+            document.getElementById('prompt4Output').value = template4
+                .replaceAll('[Insert Topic of Discussion]', topic)
+                .replace('[Insert Subreddits Here]', subreddits);
+        }
+
+        // Reset individual input field and refresh prompt previews
+        function resetField(fieldId) {
+            document.getElementById(fieldId).value = '';
+            updatePrompts();
+        }
+
+        // Copy functionality with visual feedback
+        function copyPrompt(elementId, btn) {
+            const outputBox = document.getElementById(elementId);
+
+            outputBox.select();
+            outputBox.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+
+                window.getSelection().removeAllRanges();
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        }
+
+        // Initialize prompt generation on page load
+        window.onload = updatePrompts;
+    </script>
+</body>
+</html>
